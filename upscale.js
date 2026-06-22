@@ -14,6 +14,29 @@
 
   const $ = (s) => document.querySelector(s);
 
+  // Mobile browsers (notably iOS, which backs every iPhone browser incl. Chrome)
+  // have strict canvas-size and per-tab memory limits, so big outputs crash the tab.
+  const IS_MOBILE = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) ||
+    (navigator.maxTouchPoints > 1 && /Mac/.test(navigator.platform));
+
+  // Decide how to handle a requested upscale given device limits.
+  // - "too-large": output exceeds the canvas size the device can create at all.
+  // - "fast-fallback": within canvas limits, but too heavy for the AI model's
+  //   memory footprint on this device — use the lighter canvas path instead.
+  function planUpscale(w, h, scale, mode, isMobile) {
+    const outW = w * scale, outH = h * scale;
+    const maxDim = isMobile ? 4096 : 16384;          // hard canvas dimension cap
+    const maxArea = maxDim * maxDim;                 // hard canvas area cap
+    const maxAiArea = isMobile ? 8000000 : 67108864; // AI holds a full result tensor in memory
+    if (outW > maxDim || outH > maxDim || outW * outH > maxArea) {
+      return { action: "too-large", outW, outH, maxDim };
+    }
+    if (mode === "ai" && outW * outH > maxAiArea) {
+      return { action: "fast-fallback", outW, outH };
+    }
+    return { action: mode === "ai" ? "ai" : "fast", outW, outH };
+  }
+
   // ---------- Tabs ----------
   const TABS = [["tab-clean", "panel-clean"], ["tab-upsize", "panel-upsize"]];
   function activate(activeTab) {
@@ -105,8 +128,19 @@
         url = loaded.url;
         const img = loaded.img;
 
+        const plan = planUpscale(img.naturalWidth, img.naturalHeight, scale, mode, IS_MOBILE);
+        if (plan.action === "too-large") {
+          row.markTooLarge(scale, plan.outW, plan.outH, plan.maxDim);
+          continue;
+        }
+        let useMode = mode;
+        if (plan.action === "fast-fallback") {
+          useMode = "fast";
+          row.note("Large image — using Fast mode so it doesn't run out of memory on this device.");
+        }
+
         let blob;
-        if (mode === "ai") {
+        if (useMode === "ai") {
           try {
             // First-ever AI use (or first time for this scale) loads the model — let the user know why it's slower.
             if (!engineLoaded || !upscalers[scale]) {
@@ -124,7 +158,7 @@
 
         const outName = outputName(file.name, scale);
         done.push({ name: outName, blob });
-        row.markDone(blob, scale, img.naturalWidth, img.naturalHeight, outName, mode);
+        row.markDone(blob, scale, img.naturalWidth, img.naturalHeight, outName, useMode);
       } catch (err) {
         console.error(err);
         row.markError(err);
@@ -190,8 +224,9 @@
     const src = await up.upscale(img, {
       output: "base64",
       // Tile the image so large inputs don't exhaust GPU memory; also drives progress.
-      patchSize: 128,
-      padding: 6,
+      // Smaller tiles on mobile keep peak memory low.
+      patchSize: IS_MOBILE ? 64 : 128,
+      padding: IS_MOBILE ? 4 : 6,
       progress: (rate) => { if (onProgress) onProgress(rate); },
     });
     if (onProgress) onProgress(1);
@@ -341,6 +376,12 @@
         dl.addEventListener("click", () => window.ImgUtil.saveBlob(blob, outName));
         actions.appendChild(dl);
       },
+      markTooLarge(scale, w, h, maxDim) {
+        progress.hidden = true;
+        const advice = scale > 2 ? "Try 2× or use a smaller image." : "Try a smaller image.";
+        meta.innerHTML = `<span class="err">Too large for ${scale}× on this device — the result would be ${w}×${h}, but this device supports up to about ${maxDim}px per side. ${advice}</span>`;
+        actions.innerHTML = "";
+      },
       markError(err) {
         progress.hidden = true;
         meta.innerHTML = `<span class="err">Could not process: ${window.ImgUtil.escapeHtml(err.message || String(err))}</span>`;
@@ -348,4 +389,7 @@
       },
     };
   }
+
+  // Exposed for tests.
+  window.Upsize = { planUpscale };
 })();
