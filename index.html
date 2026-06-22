@@ -17,7 +17,7 @@
     <nav>
       <a href="#how">How it works</a>
       <a href="#faq">FAQ</a>
-      <a href="https://github.com/goodermine/repository_1" rel="noopener">Source</a>
+      <a href="https://github.com/goodermine/toolbox" rel="noopener">Source</a>
     </nav>
   </header>
 
@@ -154,6 +154,10 @@
       <details>
         <summary>How does the AI upsizer work?</summary>
         <p>It runs an ESRGAN super-resolution neural network directly in your browser using TensorFlow.js. Unlike simple stretching, it reconstructs plausible detail for sharper edges and textures. The model files are bundled with this site (~3&nbsp;MB total), so after the first load it works without any network connection. Fast mode uses classic high-quality canvas scaling for instant results on any device.</p>
+      </details>
+      <details>
+        <summary>Why can't I always upscale 4× on my phone?</summary>
+        <p>Phones (especially iPhones) limit how large an image a web page can hold in memory, so a very big 4× result can crash the tab. To prevent that, large jobs automatically switch to Fast mode, and anything beyond the device's limit is declined with a message instead of crashing. On a phone, 2× works for much larger images than 4× — and any computer will handle bigger results than a phone.</p>
       </details>
       <details>
         <summary>Why is the first AI upscale slower?</summary>
