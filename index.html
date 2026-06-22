@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Image Metadata Cleaner — Strip EXIF, XMP, C2PA &amp; AI tags in your browser</title>
+  <meta name="description" content="Remove metadata (EXIF, XMP, IPTC, C2PA, AI-generation tags) from your images. 100% private — everything runs in your browser. No uploads, no limits, free." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧼</text></svg>" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">
+      <span class="logo">🧼</span>
+      <span class="brand-name">Metadata Cleaner</span>
+    </div>
+    <nav>
+      <a href="#how">How it works</a>
+      <a href="#faq">FAQ</a>
+      <a href="https://github.com/goodermine/repository_1" rel="noopener">Source</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1>Clean metadata from your images</h1>
+      <p class="subtitle">
+        Strip EXIF, XMP, IPTC, color-profile, C2PA &amp; AI-generation tags from your photos.
+        Everything runs <strong>in your browser</strong> — your images are never uploaded.
+        No limits, no sign-up, completely free.
+      </p>
+
+      <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Add images">
+        <div class="dropzone-inner">
+          <div class="dz-icon">📂</div>
+          <p class="dz-title">Drag &amp; drop images here</p>
+          <p class="dz-sub">or <span class="link">click to browse</span> · JPEG · PNG · WebP · GIF · and more</p>
+        </div>
+        <input id="fileInput" type="file" accept="image/*" multiple hidden />
+      </div>
+
+      <div class="options">
+        <label class="opt">
+          <input type="checkbox" id="optKeepColor" checked />
+          <span>Keep color profile (ICC) — recommended for accurate colors</span>
+        </label>
+        <label class="opt">
+          <input type="checkbox" id="optReencode" />
+          <span>Deep clean (re-encode pixels) — guarantees removal, may change file slightly</span>
+        </label>
+      </div>
+    </section>
+
+    <section id="results" class="results" hidden>
+      <div class="results-head">
+        <h2>Your images</h2>
+        <div class="results-actions">
+          <button id="downloadAll" class="btn btn-primary">⬇ Download all (.zip)</button>
+          <button id="clearAll" class="btn btn-ghost">Clear</button>
+        </div>
+      </div>
+      <ul id="fileList" class="file-list"></ul>
+    </section>
+
+    <section id="how" class="info">
+      <h2>How it works</h2>
+      <div class="cards">
+        <div class="card">
+          <div class="card-icon">🔒</div>
+          <h3>100% private</h3>
+          <p>All processing happens locally using JavaScript. No image data ever touches a server, so there is nothing to leak and nothing to limit.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">✂️</div>
+          <h3>Lossless by default</h3>
+          <p>Metadata segments (EXIF / XMP / IPTC / C2PA / PNG text chunks) are surgically removed while your original pixel data is kept byte-for-byte.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">♾️</div>
+          <h3>No daily limit</h3>
+          <p>Because the work runs on your own machine, you can clean as many images as you like, as fast as your computer allows.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq" class="info">
+      <h2>FAQ</h2>
+      <details>
+        <summary>What metadata gets removed?</summary>
+        <p>EXIF (camera, GPS, timestamps), XMP, IPTC/Photoshop blocks, JPEG comments, C2PA / "Content Credentials" / JUMBF provenance, and PNG/WebP text &amp; metadata chunks — which is where tools like Stable Diffusion, DALL·E and Midjourney store generation parameters and "Made with AI" labels.</p>
+      </details>
+      <details>
+        <summary>Will my image quality change?</summary>
+        <p>No, not in the default mode. We only delete metadata blocks and leave the compressed pixel data untouched, so the image is identical. The optional <em>Deep clean</em> mode re-draws the image to a canvas and re-encodes it, which guarantees removal of anything unusual but can slightly change the file.</p>
+      </details>
+      <details>
+        <summary>Are my images uploaded anywhere?</summary>
+        <p>No. Open your browser's developer tools and watch the Network tab — you'll see zero requests when you clean an image. You can even disconnect from the internet after the page loads and it still works.</p>
+      </details>
+      <details>
+        <summary>Can I host this myself?</summary>
+        <p>Yes — it's just three static files (HTML, CSS, JS). Drop them on GitHub Pages, Netlify, Vercel, or any web host for free. See the README in the repository.</p>
+      </details>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Runs entirely in your browser · Your images stay on your device · Free &amp; open source</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
