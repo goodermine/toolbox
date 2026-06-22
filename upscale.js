@@ -195,11 +195,72 @@
       progress: (rate) => { if (onProgress) onProgress(rate); },
     });
     if (onProgress) onProgress(1);
-    return dataUrlToBlob(src);
+    const rgbBlob = await dataUrlToBlob(src);
+    // ESRGAN is RGB-only and returns an opaque image. If the source had
+    // transparency (common for AI stickers/logos), reapply an upscaled alpha
+    // channel so it isn't flattened to an opaque background.
+    if (hasTransparency(img)) return compositeAlpha(rgbBlob, img);
+    return rgbBlob;
   }
 
   async function dataUrlToBlob(dataUrl) {
     return (await fetch(dataUrl)).blob();
+  }
+
+  // True if any pixel in the source image is not fully opaque.
+  function hasTransparency(img) {
+    const c = document.createElement("canvas");
+    c.width = img.naturalWidth;
+    c.height = img.naturalHeight;
+    const ctx = c.getContext("2d");
+    ctx.drawImage(img, 0, 0);
+    let data;
+    try {
+      data = ctx.getImageData(0, 0, c.width, c.height).data;
+    } catch {
+      return false; // tainted canvas (shouldn't happen for local files)
+    }
+    for (let i = 3; i < data.length; i += 4) if (data[i] < 255) return true;
+    return false;
+  }
+
+  // Replace the (opaque) alpha of the AI result with the source alpha,
+  // bicubic-scaled to the AI output dimensions.
+  async function compositeAlpha(rgbBlob, srcImg) {
+    const rgbImg = await blobToImage(rgbBlob);
+    const w = rgbImg.naturalWidth, h = rgbImg.naturalHeight;
+
+    const out = document.createElement("canvas");
+    out.width = w; out.height = h;
+    const octx = out.getContext("2d");
+    octx.drawImage(rgbImg, 0, 0);
+    const outData = octx.getImageData(0, 0, w, h);
+
+    const alpha = document.createElement("canvas");
+    alpha.width = w; alpha.height = h;
+    const actx = alpha.getContext("2d");
+    actx.imageSmoothingEnabled = true;
+    actx.imageSmoothingQuality = "high";
+    actx.drawImage(srcImg, 0, 0, w, h);
+    const aData = actx.getImageData(0, 0, w, h).data;
+
+    for (let i = 3; i < outData.data.length; i += 4) outData.data[i] = aData[i];
+    octx.putImageData(outData, 0, 0);
+
+    URL.revokeObjectURL(rgbImg.src);
+    return new Promise((res, rej) =>
+      out.toBlob((b) => (b ? res(b) : rej(new Error("encode failed"))), "image/png")
+    );
+  }
+
+  function blobToImage(blob) {
+    return new Promise((res, rej) => {
+      const url = URL.createObjectURL(blob);
+      const img = new Image();
+      img.onload = () => res(img);
+      img.onerror = () => { URL.revokeObjectURL(url); rej(new Error("decode failed")); };
+      img.src = url;
+    });
   }
 
   // ---------- Fast (canvas bicubic) ----------
