@@ -108,6 +108,10 @@
         let blob;
         if (mode === "ai") {
           try {
+            // First-ever AI use (or first time for this scale) loads the model — let the user know why it's slower.
+            if (!engineLoaded || !upscalers[scale]) {
+              row.note("⏳ Loading the AI model (one-time, ~3 MB)… this is the slow part — it's fast after this.");
+            }
             blob = await aiUpscale(img, scale, row.setProgress);
           } catch (e) {
             console.warn("AI upscale failed, falling back to fast mode:", e);
@@ -138,6 +142,7 @@
 
   // ---------- AI engine (lazy-loaded) ----------
   let enginePromise = null;
+  let engineLoaded = false;
   const upscalers = {};
 
   function loadScript(src) {
@@ -157,6 +162,7 @@
         await loadScript("vendor/upscaler.min.js");
         if (window.tf && window.tf.ready) await window.tf.ready();
         if (!window.Upscaler) throw new Error("UpscalerJS failed to initialize");
+        engineLoaded = true;
       })().catch((e) => { enginePromise = null; throw e; });
     }
     return enginePromise;

@@ -96,6 +96,19 @@ main { max-width: 960px; margin: 0 auto; padding: 0 clamp(16px, 5vw, 32px) 64px;
 .seg input:checked + span { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
 .seg input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
 .hint { color: var(--text-dim); font-size: 0.85rem; margin-top: 14px; }
+.callout {
+  max-width: 620px;
+  margin: 16px auto 0;
+  padding: 14px 18px;
+  background: rgba(79, 140, 255, 0.08);
+  border: 1px solid rgba(79, 140, 255, 0.35);
+  border-radius: 12px;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  text-align: left;
+}
+.callout strong { color: var(--text); }
 
 /* Progress bar (upsize rows) */
 .progress {

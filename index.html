@@ -101,7 +101,14 @@
             <label class="seg"><input type="radio" name="upmode" value="fast" /><span>Fast (instant)</span></label>
           </div>
         </div>
-        <p class="hint" id="aiHint">First AI use downloads a small model (~1&nbsp;MB) once, then works offline. Larger images take a few seconds each.</p>
+        <p class="callout" id="aiHint">
+          ⏳ <strong>First upscale takes a few seconds — here's why.</strong>
+          This tool is completely free and runs <strong>entirely on your own device</strong>,
+          not on a paid server. The first time you use AI mode, your browser downloads the
+          AI model just once (~3&nbsp;MB) and warms up your graphics. After that it's cached,
+          so every image is fast — and it even works offline. <em>Tip: switch to Fast mode for
+          instant results.</em>
+        </p>
       </div>
 
       <section id="resultsUp" class="results" hidden>
@@ -146,7 +153,11 @@
       </details>
       <details>
         <summary>How does the AI upsizer work?</summary>
-        <p>It runs an ESRGAN super-resolution neural network directly in your browser using TensorFlow.js. Unlike simple stretching, it reconstructs plausible detail for sharper edges and textures. The model files are bundled with this site (about 1&nbsp;MB), so after the first load it works without any network connection. Fast mode uses classic high-quality canvas scaling for instant results on any device.</p>
+        <p>It runs an ESRGAN super-resolution neural network directly in your browser using TensorFlow.js. Unlike simple stretching, it reconstructs plausible detail for sharper edges and textures. The model files are bundled with this site (~3&nbsp;MB total), so after the first load it works without any network connection. Fast mode uses classic high-quality canvas scaling for instant results on any device.</p>
+      </details>
+      <details>
+        <summary>Why is the first AI upscale slower?</summary>
+        <p>Because this tool is free and does everything <strong>on your device</strong> instead of on a paid cloud server. The first time you use AI mode, your browser downloads the model once (~3&nbsp;MB) and "warms up" your graphics hardware — that's a few seconds of one-time setup. Everything after that runs from cache and is quick, even with no internet. If you need something instantly, Fast mode skips all of this.</p>
       </details>
       <details>
         <summary>Will my image quality change?</summary>
