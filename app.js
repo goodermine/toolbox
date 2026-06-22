@@ -475,4 +475,7 @@
     for (let i = 0; i < data.length; i++) crc = table[(crc ^ data[i]) & 0xff] ^ (crc >>> 8);
     return (crc ^ 0xffffffff) >>> 0;
   }
+
+  // Shared helpers reused by the upsizer (upscale.js).
+  window.ImgUtil = { saveBlob, buildZip, formatBytes, escapeHtml };
 })();

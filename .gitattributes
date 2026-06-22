@@ -1,6 +1,11 @@
 # Auto detect text files and perform LF normalization
 * text=auto
 
+# Vendored model weights are binary — never normalize line endings.
+*.bin binary
+# Vendored minified libraries: keep verbatim, suppress diffs.
+vendor/*.min.js binary linguist-vendored
+
 # Custom for Visual Studio
 *.cs     diff=csharp
 *.sln    merge=union

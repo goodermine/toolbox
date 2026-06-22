@@ -1,13 +1,17 @@
-# 🧼 Image Metadata Cleaner
+# 🧼 Image Toolbox — Metadata Cleaner + AI Upsizer
 
-A free, private, **100% client-side** tool for stripping metadata from images —
-EXIF, XMP, IPTC, color profiles, C2PA "Content Credentials", and the text chunks
-where AI tools (Stable Diffusion, DALL·E, Midjourney) hide generation parameters
-and "Made with AI" labels.
+A free, private, **100% client-side** image toolbox with two tools:
+
+1. **Clean metadata** — strip EXIF, XMP, IPTC, color profiles, C2PA "Content
+   Credentials", and the text chunks where AI tools (Stable Diffusion, DALL·E,
+   Midjourney) hide generation parameters and "Made with AI" labels.
+2. **Upsize images** — enlarge 2× or 4× using an ESRGAN AI super-resolution
+   model (or instant fast mode).
 
 It's an open alternative to sites like aimetadatacleaner.com — but because **all
 the work happens in your browser**, there are no uploads, no daily limits, no
-sign-up, and nothing for anyone to leak.
+sign-up, and nothing for anyone to leak. The AI model is bundled with the site,
+so upsizing works even offline after first load.
 
 ## Why this is better than the site you were using
 
@@ -32,6 +36,17 @@ sign-up, and nothing for anyone to leak.
   of anything unusual (also handles GIF/BMP/other formats).
 - **Download all** as a `.zip` (built in plain JS — no dependencies).
 - Shows you exactly **what was removed** from each file.
+
+### Upsizer
+
+- **AI mode** — ESRGAN super-resolution via [UpscalerJS](https://upscalerjs.com/)
+  on [TensorFlow.js](https://www.tensorflow.org/js), reconstructing real detail
+  rather than just stretching. Models are vendored in `/vendor` (loaded locally,
+  never from a CDN), so it's private and works offline after first load. The
+  library + model load lazily, only when you first use the Upsize tab.
+- **Fast mode** — high-quality canvas (bicubic) scaling. Instant, works on any
+  device, no download.
+- **2× and 4×**, batch processing, progress bars, PNG output, and `.zip` download.
 
 ## Run it locally
 
