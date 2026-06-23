@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Free AI Background Remover — private, in your browser | Image Toolbox</title>
+  <meta name="description" content="Remove image backgrounds with AI, free. Runs 100% in your browser — your images are never uploaded. No sign-up, no limits." />
+  <link rel="canonical" href="https://goodermine.github.io/toolbox/background/" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✂️</text></svg>" />
+  <link rel="stylesheet" href="../styles.css" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Image Toolbox" />
+  <meta property="og:title" content="Free AI Background Remover — private, in your browser" />
+  <meta property="og:description" content="Remove image backgrounds with AI, 100% in your browser. Never uploaded." />
+  <meta property="og:url" content="https://goodermine.github.io/toolbox/background/" />
+  <meta property="og:image" content="https://goodermine.github.io/toolbox/og-image.png" />
+  <meta property="og:image:width" content="1280" />
+  <meta property="og:image:height" content="640" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://goodermine.github.io/toolbox/og-image.png" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">
+      <a href="../" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:10px;">
+        <span class="logo">🧼</span>
+        <span class="brand-name">Image Toolbox</span>
+      </a>
+    </div>
+    <nav>
+      <a href="../">All tools</a>
+      <a href="#faq">FAQ</a>
+      <a href="https://github.com/goodermine/toolbox" rel="noopener">Source</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="panel">
+      <div class="hero">
+        <h1>AI background remover</h1>
+        <p class="subtitle">
+          Cut out the background and get a transparent PNG — powered by an AI model that runs
+          <strong>entirely in your browser</strong>. Your images are never uploaded. Free, no limits.
+        </p>
+
+        <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Add images">
+          <div class="dropzone-inner">
+            <div class="dz-icon">✂️</div>
+            <p class="dz-title">Drag &amp; drop images here</p>
+            <p class="dz-sub">or <span class="link">click to browse</span> · JPG · PNG · WebP</p>
+          </div>
+          <input id="fileInput" type="file" accept="image/*" multiple hidden />
+        </div>
+
+        <p class="callout" id="aiHint">
+          ⏳ <strong>First use downloads a small AI model (~18&nbsp;MB) once.</strong>
+          It then runs offline on your device. Works best on photos with a clear subject
+          (a person, product, animal). Large images are scaled down to keep memory in check.
+        </p>
+      </div>
+
+      <section id="results" class="results" hidden>
+        <div class="results-head">
+          <h2>Your images</h2>
+          <div class="results-actions">
+            <button id="downloadAll" class="btn btn-primary">⬇ Download all (.zip)</button>
+            <button id="clearAll" class="btn btn-ghost">Clear</button>
+          </div>
+        </div>
+        <ul id="fileList" class="file-list"></ul>
+      </section>
+    </section>
+
+    <section id="faq" class="info">
+      <h2>FAQ</h2>
+      <details open>
+        <summary>Is my image uploaded?</summary>
+        <p>No. The AI model (U²-Net) runs on your own device via <a href="https://github.com/microsoft/onnxruntime" rel="noopener">ONNX Runtime Web</a>. After the one-time model download, it works fully offline — nothing is ever sent to a server.</p>
+      </details>
+      <details>
+        <summary>What works best?</summary>
+        <p>Photos with a clear, distinct subject — a person, product, pet, or object against a simpler background. Very busy or low-contrast scenes are harder.</p>
+      </details>
+      <details>
+        <summary>Why is the first run slow?</summary>
+        <p>The model and runtime download once (~18&nbsp;MB total) and your device "warms up." After that it's cached and quick — and works without internet.</p>
+      </details>
+      <details>
+        <summary>What do I get?</summary>
+        <p>A PNG with the background removed (transparent). Drop in many at once and download them all as a ZIP.</p>
+      </details>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Runs entirely in your browser · Your images stay on your device · <a href="../">More free tools</a></p>
+  </footer>
+
+  <script src="../shared.js"></script>
+  <script src="background.js"></script>
+</body>
+</html>
