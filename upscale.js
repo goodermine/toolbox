@@ -14,25 +14,41 @@
 
   const $ = (s) => document.querySelector(s);
 
-  // Mobile browsers (notably iOS, which backs every iPhone browser incl. Chrome)
-  // have strict canvas-size and per-tab memory limits, so big outputs crash the tab.
-  const IS_MOBILE = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) ||
-    (navigator.maxTouchPoints > 1 && /Mac/.test(navigator.platform));
+  // Device class matters a lot: iOS browsers (every iPhone/iPad browser, incl.
+  // Chrome, runs on Safari/WebKit) have very strict per-tab memory limits and
+  // crash the tab on big images. Android Chrome and desktops handle far more.
+  const UA = navigator.userAgent;
+  const IS_IOS = /iPhone|iPad|iPod/.test(UA) ||
+    (navigator.maxTouchPoints > 1 && /Macintosh/.test(UA)); // iPadOS reports as "Macintosh"
+  const IS_ANDROID = /Android/.test(UA);
+  const IS_MOBILE = IS_IOS || IS_ANDROID;
 
-  // Decide how to handle a requested upscale given device limits.
-  // - "too-large": output exceeds the canvas size the device can create at all.
-  // - "fast-fallback": within canvas limits, but too heavy for the AI model's
-  //   memory footprint on this device — use the lighter canvas path instead.
-  function planUpscale(w, h, scale, mode, isMobile) {
-    const outW = w * scale, outH = h * scale;
-    const maxDim = isMobile ? 4096 : 16384;          // hard canvas dimension cap
-    const maxArea = maxDim * maxDim;                 // hard canvas area cap
-    const maxAiArea = isMobile ? 8000000 : 67108864; // AI holds a full result tensor in memory
-    if (outW > maxDim || outH > maxDim || outW * outH > maxArea) {
-      return { action: "too-large", outW, outH, maxDim };
+  // Per-device pixel budgets (output pixels):
+  //  - maxDim/maxArea: hard canvas limit — beyond this the canvas can't exist.
+  //  - aiBudget: above this, the AI model's tensors would exhaust memory.
+  //  - fastBudget: above this, even plain canvas scaling risks crashing.
+  function deviceLimits() {
+    if (IS_IOS) return { maxDim: 4096, aiBudget: 5000000, fastBudget: 9000000 };
+    if (IS_ANDROID) return { maxDim: 8192, aiBudget: 16777216, fastBudget: 67108864 };
+    return { maxDim: 16384, aiBudget: 67108864, fastBudget: 268435456 };
+  }
+
+  // Decide how to handle a requested upscale given device limits:
+  //  - "ai" / "fast": proceed with that engine.
+  //  - "fast-fallback": too heavy for AI, but fine via plain canvas scaling.
+  //  - "too-big": exceeds what this device can do at all — recommend a lower scale.
+  function planUpscale(w, h, scale, mode, L) {
+    const outW = w * scale, outH = h * scale, area = outW * outH;
+    if (outW > L.maxDim || outH > L.maxDim || area > L.maxDim * L.maxDim) {
+      return { action: "too-big", outW, outH };
     }
-    if (mode === "ai" && outW * outH > maxAiArea) {
-      return { action: "fast-fallback", outW, outH };
+    if (mode === "ai" && area > L.aiBudget) {
+      return area <= L.fastBudget
+        ? { action: "fast-fallback", outW, outH }
+        : { action: "too-big", outW, outH };
+    }
+    if (mode === "fast" && area > L.fastBudget) {
+      return { action: "too-big", outW, outH };
     }
     return { action: mode === "ai" ? "ai" : "fast", outW, outH };
   }
@@ -63,6 +79,9 @@
   /** @type {{name:string, blob:Blob}[]} */
   const done = [];
 
+  const currentScale = () => +document.querySelector('input[name="scale"]:checked').value;
+  const currentMode = () => document.querySelector('input[name="upmode"]:checked').value;
+
   // ---------- UI wiring ----------
   dropzone.addEventListener("click", () => fileInput.click());
   dropzone.addEventListener("keydown", (e) => {
@@ -87,6 +106,16 @@
     })
   );
 
+  // Warn iPhone/iPad users up front that 4× usually exceeds their memory limit.
+  const scaleWarn = $("#scaleWarn");
+  function updateScaleWarning() {
+    if (scaleWarn) scaleWarn.hidden = !(IS_IOS && currentScale() === 4);
+  }
+  document.querySelectorAll('input[name="scale"]').forEach((r) =>
+    r.addEventListener("change", updateScaleWarning)
+  );
+  updateScaleWarning();
+
   clearAllBtn.addEventListener("click", () => {
     done.length = 0;
     fileList.innerHTML = "";
@@ -105,9 +134,6 @@
     }
   });
 
-  const currentScale = () => +document.querySelector('input[name="scale"]:checked').value;
-  const currentMode = () => document.querySelector('input[name="upmode"]:checked').value;
-
   // ---------- File handling (sequential — AI is GPU-heavy) ----------
   async function handleFiles(fileListLike) {
     const files = Array.from(fileListLike).filter(
@@ -118,6 +144,7 @@
 
     const scale = currentScale();
     const mode = currentMode();
+    const limits = deviceLimits();
 
     for (const file of files) {
       const row = makeRow(file);
@@ -128,9 +155,9 @@
         url = loaded.url;
         const img = loaded.img;
 
-        const plan = planUpscale(img.naturalWidth, img.naturalHeight, scale, mode, IS_MOBILE);
-        if (plan.action === "too-large") {
-          row.markTooLarge(scale, plan.outW, plan.outH, plan.maxDim);
+        const plan = planUpscale(img.naturalWidth, img.naturalHeight, scale, mode, limits);
+        if (plan.action === "too-big") {
+          row.markTooBig(scale, plan.outW, plan.outH);
           continue;
         }
         let useMode = mode;
@@ -376,10 +403,12 @@
         dl.addEventListener("click", () => window.ImgUtil.saveBlob(blob, outName));
         actions.appendChild(dl);
       },
-      markTooLarge(scale, w, h, maxDim) {
+      markTooBig(scale, w, h) {
         progress.hidden = true;
-        const advice = scale > 2 ? "Try 2× or use a smaller image." : "Try a smaller image.";
-        meta.innerHTML = `<span class="err">Too large for ${scale}× on this device — the result would be ${w}×${h}, but this device supports up to about ${maxDim}px per side. ${advice}</span>`;
+        const advice = scale > 2
+          ? "Unfortunately " + scale + "× is too memory-heavy for this browser — please use 2× instead (it works reliably here)."
+          : "This image is too large for this browser — please try a smaller image.";
+        meta.innerHTML = `<span class="err">${advice} <span class="dim">(${scale}× would be ${w}×${h}.)</span></span>`;
         actions.innerHTML = "";
       },
       markError(err) {
@@ -391,5 +420,5 @@
   }
 
   // Exposed for tests.
-  window.Upsize = { planUpscale };
+  window.Upsize = { planUpscale, deviceLimits, IS_IOS, IS_ANDROID };
 })();
