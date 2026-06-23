@@ -1,9 +1,21 @@
 /*
  * Shared helpers for every tool page (cleaner, upsizer, HEIC, …).
  * Exposes window.ImgUtil. Load this before any tool script.
+ * Also registers the service worker (PWA / offline).
  */
 (() => {
   "use strict";
+
+  // shared.js lives at the site root, so resolve sw.js/scope relative to it —
+  // works from any page depth and is independent of the repo name.
+  const self_ = document.currentScript && document.currentScript.src;
+  if (self_ && "serviceWorker" in navigator) {
+    const swUrl = new URL("sw.js", self_).href;
+    const scope = new URL("./", self_).href;
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register(swUrl, { scope }).catch(() => {});
+    });
+  }
 
   function escapeHtml(s) {
     return String(s).replace(/[&<>"']/g, (c) =>
