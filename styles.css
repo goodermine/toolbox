@@ -109,6 +109,11 @@ main { max-width: 960px; margin: 0 auto; padding: 0 clamp(16px, 5vw, 32px) 64px;
   text-align: left;
 }
 .callout strong { color: var(--text); }
+.callout.warn {
+  background: rgba(240, 165, 0, 0.10);
+  border-color: rgba(240, 165, 0, 0.45);
+}
+.file-meta .dim { opacity: 0.65; }
 
 /* Progress bar (upsize rows) */
 .progress {
