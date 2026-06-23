@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Compress &amp; Convert Images — free, private, no upload | Image Toolbox</title>
+  <meta name="description" content="Compress images and convert between JPG, PNG &amp; WebP, free. 100% in your browser — never uploaded. Optional resize, batch, no limits." />
+  <link rel="canonical" href="https://goodermine.github.io/toolbox/compress/" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🗜️</text></svg>" />
+  <link rel="stylesheet" href="../styles.css" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Image Toolbox" />
+  <meta property="og:title" content="Compress &amp; Convert Images — free, private, no upload" />
+  <meta property="og:description" content="Compress images and convert JPG/PNG/WebP, 100% in your browser. Never uploaded." />
+  <meta property="og:url" content="https://goodermine.github.io/toolbox/compress/" />
+  <meta property="og:image" content="https://goodermine.github.io/toolbox/og-image.png" />
+  <meta property="og:image:width" content="1280" />
+  <meta property="og:image:height" content="640" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://goodermine.github.io/toolbox/og-image.png" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">
+      <a href="../" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:10px;">
+        <span class="logo">🧼</span>
+        <span class="brand-name">Image Toolbox</span>
+      </a>
+    </div>
+    <nav>
+      <a href="../">All tools</a>
+      <a href="#faq">FAQ</a>
+      <a href="https://github.com/goodermine/toolbox" rel="noopener">Source</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="panel">
+      <div class="hero">
+        <h1>Compress &amp; convert images</h1>
+        <p class="subtitle">
+          Shrink file sizes and convert between <strong>JPG, PNG &amp; WebP</strong> — with optional resizing.
+          Everything runs <strong>in your browser</strong>; your images are never uploaded. No limits, free.
+        </p>
+
+        <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Add images">
+          <div class="dropzone-inner">
+            <div class="dz-icon">📂</div>
+            <p class="dz-title">Drag &amp; drop images here</p>
+            <p class="dz-sub">or <span class="link">click to browse</span> · JPG · PNG · WebP</p>
+          </div>
+          <input id="fileInput" type="file" accept="image/*" multiple hidden />
+        </div>
+
+        <div class="up-controls">
+          <div class="control-group" role="radiogroup" aria-label="Output format">
+            <span class="control-label">Format</span>
+            <label class="seg"><input type="radio" name="fmt" value="keep" checked /><span>Keep</span></label>
+            <label class="seg"><input type="radio" name="fmt" value="jpeg" /><span>JPG</span></label>
+            <label class="seg"><input type="radio" name="fmt" value="png" /><span>PNG</span></label>
+            <label class="seg"><input type="radio" name="fmt" value="webp" /><span>WebP</span></label>
+          </div>
+        </div>
+        <div class="up-controls">
+          <div class="control-group" id="qualityGroup">
+            <span class="control-label">Quality</span>
+            <input type="range" id="quality" min="40" max="100" value="80" />
+            <span id="qualityVal" class="control-label">80%</span>
+          </div>
+          <div class="control-group">
+            <span class="control-label">Max size</span>
+            <select id="maxDim" class="select">
+              <option value="0">Original</option>
+              <option value="3840">3840 px</option>
+              <option value="1920">1920 px</option>
+              <option value="1280">1280 px</option>
+              <option value="1024">1024 px</option>
+              <option value="800">800 px</option>
+            </select>
+          </div>
+        </div>
+        <p class="hint">Quality applies to JPG &amp; WebP. "Max size" limits the longest side (keeps aspect ratio).</p>
+      </div>
+
+      <section id="results" class="results" hidden>
+        <div class="results-head">
+          <h2>Your images</h2>
+          <div class="results-actions">
+            <button id="downloadAll" class="btn btn-primary">⬇ Download all (.zip)</button>
+            <button id="clearAll" class="btn btn-ghost">Clear</button>
+          </div>
+        </div>
+        <ul id="fileList" class="file-list"></ul>
+      </section>
+    </section>
+
+    <section id="faq" class="info">
+      <h2>FAQ</h2>
+      <details open>
+        <summary>Are my images uploaded?</summary>
+        <p>No. Everything is processed on your device with JavaScript (the open-source <a href="https://github.com/Donaldcwl/browser-image-compression" rel="noopener">browser-image-compression</a> library). Nothing is sent to a server.</p>
+      </details>
+      <details>
+        <summary>Which format should I pick?</summary>
+        <p><strong>JPG</strong> — smallest, best for photos. <strong>WebP</strong> — even smaller at similar quality, supported by all modern browsers. <strong>PNG</strong> — lossless, supports transparency. <strong>Keep</strong> — same format as the input, just compressed/resized.</p>
+      </details>
+      <details>
+        <summary>Will it ruin quality?</summary>
+        <p>You control it with the quality slider. Higher = better looking but larger; 80% is a good balance for most photos. PNG is always lossless.</p>
+      </details>
+      <details>
+        <summary>Can I do lots at once?</summary>
+        <p>Yes — add as many as you like and download them all as a ZIP. No daily limit.</p>
+      </details>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Runs entirely in your browser · Your images stay on your device · <a href="../">More free tools</a></p>
+  </footer>
+
+  <script src="../shared.js"></script>
+  <script src="compress.js"></script>
+</body>
+</html>

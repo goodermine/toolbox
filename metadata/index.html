@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Image Metadata Viewer — see EXIF, GPS &amp; hidden data | Image Toolbox</title>
+  <meta name="description" content="See the hidden metadata in your photos — EXIF, GPS location, camera, date, and AI tags. 100% in your browser; nothing is uploaded." />
+  <link rel="canonical" href="https://goodermine.github.io/toolbox/metadata/" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔎</text></svg>" />
+  <link rel="stylesheet" href="../styles.css" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Image Toolbox" />
+  <meta property="og:title" content="Image Metadata Viewer — see EXIF, GPS &amp; hidden data" />
+  <meta property="og:description" content="See the hidden metadata in your photos — EXIF, GPS, camera, date. 100% in your browser." />
+  <meta property="og:url" content="https://goodermine.github.io/toolbox/metadata/" />
+  <meta property="og:image" content="https://goodermine.github.io/toolbox/og-image.png" />
+  <meta property="og:image:width" content="1280" />
+  <meta property="og:image:height" content="640" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://goodermine.github.io/toolbox/og-image.png" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">
+      <a href="../" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:10px;">
+        <span class="logo">🧼</span>
+        <span class="brand-name">Image Toolbox</span>
+      </a>
+    </div>
+    <nav>
+      <a href="../">All tools</a>
+      <a href="#faq">FAQ</a>
+      <a href="https://github.com/goodermine/toolbox" rel="noopener">Source</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="panel">
+      <div class="hero">
+        <h1>Image metadata viewer</h1>
+        <p class="subtitle">
+          See what's <strong>hidden</strong> inside your photos — GPS location, camera, timestamps,
+          and AI-generation tags. Everything is read <strong>in your browser</strong>; nothing is uploaded.
+        </p>
+
+        <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Add images">
+          <div class="dropzone-inner">
+            <div class="dz-icon">📂</div>
+            <p class="dz-title">Drag &amp; drop images here</p>
+            <p class="dz-sub">or <span class="link">click to browse</span> · JPG · PNG · HEIC · WebP · TIFF</p>
+          </div>
+          <input id="fileInput" type="file" accept="image/*" multiple hidden />
+        </div>
+        <p class="hint">Want to <strong>remove</strong> this data? Use the <a href="../">metadata cleaner</a> on the home page.</p>
+      </div>
+
+      <section id="results" class="results" hidden>
+        <div class="results-head">
+          <h2>What's inside</h2>
+          <div class="results-actions">
+            <button id="clearAll" class="btn btn-ghost">Clear</button>
+          </div>
+        </div>
+        <div id="cards"></div>
+      </section>
+    </section>
+
+    <section id="faq" class="info">
+      <h2>FAQ</h2>
+      <details open>
+        <summary>Why does this matter?</summary>
+        <p>Photos often carry hidden data: the exact <strong>GPS coordinates</strong> where they were taken, your camera/phone model and serial, timestamps, and (for AI images) generation parameters or "Made with AI" tags. Anyone you share the file with can read it. This tool shows you exactly what's there.</p>
+      </details>
+      <details>
+        <summary>Is anything uploaded?</summary>
+        <p>No. Metadata is read locally with the open-source <a href="https://github.com/MikeKovarik/exifr" rel="noopener">exifr</a> library. Your images never leave your device.</p>
+      </details>
+      <details>
+        <summary>How do I remove it?</summary>
+        <p>Head to the <a href="../">home page</a> and use the Clean Metadata tool — it strips all of this while keeping your image pixel-for-pixel identical.</p>
+      </details>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Runs entirely in your browser · Your images stay on your device · <a href="../">More free tools</a></p>
+  </footer>
+
+  <script src="../shared.js"></script>
+  <script src="metadata.js"></script>
+</body>
+</html>
