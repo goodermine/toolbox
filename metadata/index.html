@@ -44,7 +44,8 @@
         <h1>Image metadata viewer</h1>
         <p class="subtitle">
           See what's <strong>hidden</strong> inside your photos — GPS location, camera, timestamps,
-          and AI-generation tags. Everything is read <strong>in your browser</strong>; nothing is uploaded.
+          PNG text chunks, and <strong>AI-generation signs</strong> (C2PA Content Credentials, tool
+          names, "AI source" tags). Everything is read <strong>in your browser</strong>; nothing is uploaded.
         </p>
 
         <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Add images">
@@ -78,6 +79,10 @@
       <details>
         <summary>Is anything uploaded?</summary>
         <p>No. Metadata is read locally with the open-source <a href="https://github.com/MikeKovarik/exifr" rel="noopener">exifr</a> library. Your images never leave your device.</p>
+      </details>
+      <details>
+        <summary>Can it tell if an image is AI-generated?</summary>
+        <p>Sometimes. It flags AI provenance when the file actually contains a signal — C2PA "Content Credentials", an IPTC "AI-generated" source tag, generator names (Gemini, DALL·E, Midjourney, Stable Diffusion, …) in the metadata or PNG text chunks. But there's a big caveat: many AI tools — notably <strong>Google's Gemini/Imagen</strong> — mark images with <strong>SynthID</strong>, an <em>invisible watermark embedded in the pixels themselves</em>. That isn't metadata, so no metadata viewer (this one or any other) can detect it. Likewise, re-saving or screenshotting an image usually strips any metadata signal entirely.</p>
       </details>
       <details>
         <summary>How do I remove it?</summary>

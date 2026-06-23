@@ -126,6 +126,11 @@ main { max-width: 960px; margin: 0 auto; padding: 0 clamp(16px, 5vw, 32px) 64px;
   border-radius: 10px; padding: 10px 14px; margin-bottom: 12px; font-size: 0.92rem;
 }
 .gps-banner a { color: var(--accent); }
+.ai-banner {
+  background: rgba(111, 111, 255, 0.12); border: 1px solid rgba(111, 111, 255, 0.5);
+  border-radius: 10px; padding: 10px 14px; margin-bottom: 12px; font-size: 0.92rem;
+}
+.meta-note { color: var(--text-dim); font-size: 0.85rem; margin: 10px 0 0; line-height: 1.5; }
 .meta-list {
   display: grid; grid-template-columns: minmax(140px, 220px) 1fr; gap: 6px 16px;
   margin: 0; font-size: 0.9rem; max-height: 360px; overflow: auto;
