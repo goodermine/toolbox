@@ -144,6 +144,7 @@
     const objUrl = URL.createObjectURL(file);
     img.src = objUrl;
     img.onload = () => URL.revokeObjectURL(objUrl);
+    img.onerror = () => { URL.revokeObjectURL(objUrl); img.style.visibility = "hidden"; };
 
     const info = document.createElement("div");
     info.className = "file-info";
@@ -163,9 +164,11 @@
       el,
       markDone(blob, origSize, outName) {
         const pct = origSize > 0 ? Math.round((1 - blob.size / origSize) * 100) : 0;
-        const change = pct >= 0
+        const change = pct > 0
           ? `<span class="save">−${pct}%</span>`
-          : `<span class="grow">+${-pct}%</span>`;
+          : pct < 0
+            ? `<span class="grow">+${-pct}%</span>`
+            : `<span class="dim">no change</span>`;
         const ext = outName.split(".").pop().toUpperCase();
         meta.innerHTML = `${formatBytes(origSize)} → ${formatBytes(blob.size)} ${change}` +
           `<span class="badge">${ext}</span>`;

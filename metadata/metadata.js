@@ -103,7 +103,10 @@
     img.alt = "";
     const url = URL.createObjectURL(file);
     img.src = url;
+    // Revoke on both paths — many accepted formats (HEIC/TIFF/AVIF) can't be
+    // rendered by <img>, so onload may never fire.
     img.onload = () => URL.revokeObjectURL(url);
+    img.onerror = () => { URL.revokeObjectURL(url); img.style.visibility = "hidden"; };
     const title = document.createElement("div");
     title.className = "file-info";
     title.innerHTML = `<div class="file-name">${escapeHtml(file.name)}</div>
@@ -120,14 +123,18 @@
       el,
       render(data, gps) {
         const entries = data ? Object.entries(data).filter(([, v]) => v != null && v !== "") : [];
-        if (entries.length === 0 && !gps) {
+        const hasGps = !!(gps && gps.latitude != null && gps.longitude != null);
+        if (entries.length === 0 && !hasGps) {
           metaLine.innerHTML = `${formatBytes(file.size)} · <span class="save">No metadata found 🎉</span>`;
           return;
         }
-        metaLine.innerHTML = `${formatBytes(file.size)} · <span class="removed">${entries.length} field${entries.length === 1 ? "" : "s"}</span>`;
+        const parts = [];
+        if (entries.length) parts.push(`${entries.length} field${entries.length === 1 ? "" : "s"}`);
+        if (hasGps) parts.push("GPS location");
+        metaLine.innerHTML = `${formatBytes(file.size)} · <span class="removed">${parts.join(" + ")}</span>`;
 
         let html = "";
-        if (gps && gps.latitude != null && gps.longitude != null) {
+        if (hasGps) {
           const lat = gps.latitude.toFixed(6), lon = gps.longitude.toFixed(6);
           html += `<div class="gps-banner">📍 <strong>Location found:</strong> ${lat}, ${lon}
             <a href="https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=15/${lat}/${lon}" target="_blank" rel="noopener">view map ↗</a></div>`;

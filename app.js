@@ -107,6 +107,7 @@
     const objUrl = URL.createObjectURL(file);
     img.src = objUrl;
     img.onload = () => URL.revokeObjectURL(objUrl);
+    img.onerror = () => { URL.revokeObjectURL(objUrl); img.style.visibility = "hidden"; };
 
     const info = document.createElement("div");
     info.className = "file-info";

@@ -161,6 +161,7 @@
         img.alt = "";
         img.src = url;
         img.onload = () => URL.revokeObjectURL(url);
+        img.onerror = () => { URL.revokeObjectURL(url); img.style.visibility = "hidden"; };
         thumb.replaceWith(img);
 
         meta.innerHTML = `${formatBytes(origSize)} → ${formatBytes(blob.size)}` +

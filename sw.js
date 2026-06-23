@@ -40,19 +40,24 @@ self.addEventListener("fetch", (e) => {
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) return; // only handle our own assets
 
-  if (req.mode === "navigate") {
+  // Big, immutable third-party libraries/models: cache-first (fast + offline).
+  if (url.pathname.includes("/vendor/")) {
     e.respondWith(
-      fetch(req)
-        .then((res) => { cachePut(req, res); return res; })
-        .catch(() => caches.match(req).then((hit) => hit || caches.match("./index.html")))
+      caches.match(req).then((hit) =>
+        hit || fetch(req).then((res) => { cachePut(req, res); return res; })
+      )
     );
     return;
   }
 
+  // App shell + pages: network-first so deploys take effect immediately,
+  // falling back to cache when offline.
   e.respondWith(
-    caches.match(req).then((hit) =>
-      hit || fetch(req).then((res) => { cachePut(req, res); return res; })
-    )
+    fetch(req)
+      .then((res) => { cachePut(req, res); return res; })
+      .catch(() => caches.match(req).then((hit) =>
+        hit || (req.mode === "navigate" ? caches.match("./index.html") : undefined)
+      ))
   );
 });
 

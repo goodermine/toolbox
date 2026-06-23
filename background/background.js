@@ -139,17 +139,9 @@
     const px = ictx.getImageData(0, 0, MODEL_SIZE, MODEL_SIZE).data;
 
     const n = MODEL_SIZE * MODEL_SIZE;
-    let maxVal = 0;
-    for (let i = 0; i < px.length; i += 4) {
-      if (px[i] > maxVal) maxVal = px[i];
-      if (px[i + 1] > maxVal) maxVal = px[i + 1];
-      if (px[i + 2] > maxVal) maxVal = px[i + 2];
-    }
-    if (maxVal === 0) maxVal = 1;
-
     const data = new Float32Array(3 * n);
     for (let p = 0; p < n; p++) {
-      const r = px[p * 4] / maxVal, g = px[p * 4 + 1] / maxVal, b = px[p * 4 + 2] / maxVal;
+      const r = px[p * 4] / 255, g = px[p * 4 + 1] / 255, b = px[p * 4 + 2] / 255;
       data[p] = (r - MEAN[0]) / STD[0];                 // R plane
       data[n + p] = (g - MEAN[1]) / STD[1];             // G plane
       data[2 * n + p] = (b - MEAN[2]) / STD[2];         // B plane
