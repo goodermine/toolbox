@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Image Toolbox — Clean metadata &amp; upsize images, free &amp; private in your browser</title>
   <meta name="description" content="Free, private image tools that run 100% in your browser. Strip metadata (EXIF, XMP, C2PA, AI tags) and AI-upscale your images 2x/4x. No uploads, no limits." />
+  <link rel="canonical" href="https://goodermine.github.io/toolbox/" />
 
   <!-- Social / Open Graph preview -->
   <meta property="og:type" content="website" />
@@ -20,6 +21,9 @@
   <meta name="twitter:description" content="Strip hidden metadata and AI-upscale your images 2×/4× — 100% in your browser. No uploads, no limits, always free." />
   <meta name="twitter:image" content="https://goodermine.github.io/toolbox/og-image.png" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧼</text></svg>" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="theme-color" content="#0d1117" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -29,7 +33,10 @@
       <span class="brand-name">Image Toolbox</span>
     </div>
     <nav>
-      <a href="#how">How it works</a>
+      <a href="heic/">HEIC → JPG</a>
+      <a href="compress/">Compress</a>
+      <a href="background/">Remove BG</a>
+      <a href="metadata/">Metadata</a>
       <a href="#faq">FAQ</a>
       <a href="https://github.com/goodermine/toolbox" rel="noopener">Source</a>
     </nav>
@@ -143,6 +150,33 @@
       </section>
     </section>
 
+    <!-- ============ MORE TOOLS ============ -->
+    <section class="info">
+      <h2>More free tools</h2>
+      <div class="cards">
+        <a class="card tool-card" href="heic/">
+          <div class="card-icon">🖼️</div>
+          <h3>HEIC → JPG</h3>
+          <p>Convert iPhone HEIC/HEIF photos to JPG or PNG.</p>
+        </a>
+        <a class="card tool-card" href="compress/">
+          <div class="card-icon">🗜️</div>
+          <h3>Compress &amp; convert</h3>
+          <p>Shrink file size and switch between JPG, PNG &amp; WebP.</p>
+        </a>
+        <a class="card tool-card" href="background/">
+          <div class="card-icon">✂️</div>
+          <h3>AI background remover</h3>
+          <p>Cut out the background to a transparent PNG, on-device.</p>
+        </a>
+        <a class="card tool-card" href="metadata/">
+          <div class="card-icon">🔎</div>
+          <h3>Metadata viewer</h3>
+          <p>See the hidden EXIF, GPS &amp; AI data inside a photo.</p>
+        </a>
+      </div>
+    </section>
+
     <!-- ============ SHARED INFO ============ -->
     <section id="how" class="info">
       <h2>How it works</h2>
@@ -202,6 +236,7 @@
     <p>Runs entirely in your browser · Your images stay on your device · Free &amp; open source</p>
   </footer>
 
+  <script src="shared.js"></script>
   <script src="app.js"></script>
   <script src="upscale.js"></script>
 </body>

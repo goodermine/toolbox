@@ -3,6 +3,8 @@
 
 # Vendored model weights are binary — never normalize line endings.
 *.bin binary
+*.wasm binary
+*.onnx binary
 # Vendored minified libraries: keep verbatim, suppress diffs.
 vendor/*.min.js binary linguist-vendored
 

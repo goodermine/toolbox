@@ -96,6 +96,34 @@ main { max-width: 960px; margin: 0 auto; padding: 0 clamp(16px, 5vw, 32px) 64px;
 .seg input:checked + span { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
 .seg input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
 .hint { color: var(--text-dim); font-size: 0.85rem; margin-top: 14px; }
+.select {
+  background: var(--bg-card);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 8px 12px;
+  font-size: 0.92rem;
+  cursor: pointer;
+}
+.file-meta .save { color: var(--good); }
+.file-meta .grow { color: var(--warn); }
+
+/* Metadata viewer cards */
+.meta-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 14px; }
+.meta-head { display: flex; align-items: center; gap: 16px; }
+.meta-body { margin-top: 14px; }
+.gps-banner {
+  background: rgba(240, 165, 0, 0.10); border: 1px solid rgba(240, 165, 0, 0.45);
+  border-radius: 10px; padding: 10px 14px; margin-bottom: 12px; font-size: 0.92rem;
+}
+.gps-banner a { color: var(--accent); }
+.meta-list {
+  display: grid; grid-template-columns: minmax(140px, 220px) 1fr; gap: 6px 16px;
+  margin: 0; font-size: 0.9rem; max-height: 360px; overflow: auto;
+}
+.meta-list dt { color: var(--text-dim); font-weight: 600; overflow-wrap: anywhere; }
+.meta-list dt.sensitive { color: var(--warn); }
+.meta-list dd { margin: 0; overflow-wrap: anywhere; }
 .callout {
   max-width: 620px;
   margin: 16px auto 0;
@@ -226,6 +254,8 @@ main { max-width: 960px; margin: 0 auto; padding: 0 clamp(16px, 5vw, 32px) 64px;
 .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; }
 .card-icon { font-size: 1.8rem; margin-bottom: 8px; }
 .card h3 { margin: 0 0 8px; }
+a.tool-card { text-decoration: none; color: inherit; transition: border-color 0.15s, transform 0.1s; }
+a.tool-card:hover { border-color: var(--accent); transform: translateY(-2px); }
 .card p { color: var(--text-dim); margin: 0; font-size: 0.95rem; }
 
 details {
@@ -238,6 +268,37 @@ details p { color: var(--text-dim); margin: 12px 0 0; }
 .site-footer {
   text-align: center; color: var(--text-dim); font-size: 0.9rem;
   padding: 32px 16px; border-top: 1px solid var(--border);
+}
+
+/* Before/after compare slider */
+.cmp-overlay {
+  position: fixed; inset: 0; z-index: 50;
+  background: rgba(0, 0, 0, 0.82); backdrop-filter: blur(4px);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 14px; padding: 20px;
+}
+.cmp-box { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.cmp-frame {
+  position: relative; max-width: 92vw; max-height: 78vh;
+  width: min(92vw, 900px); border-radius: 12px; overflow: hidden;
+  background: #0a0d12; box-shadow: var(--shadow); touch-action: none;
+}
+.cmp-base, .cmp-before {
+  display: block; width: 100%; height: 100%; object-fit: contain; user-select: none; -webkit-user-drag: none;
+}
+.cmp-before { position: absolute; inset: 0; clip-path: inset(0 50% 0 0); }
+.cmp-divider {
+  position: absolute; top: 0; bottom: 0; left: 50%; width: 2px; margin-left: -1px;
+  background: #fff; box-shadow: 0 0 0 1px rgba(0,0,0,0.4); pointer-events: none;
+}
+.cmp-label {
+  position: absolute; top: 10px; font-size: 0.78rem; font-weight: 700;
+  padding: 3px 9px; border-radius: 999px; background: rgba(13,17,23,0.75); color: #fff;
+}
+.cmp-label-l { left: 10px; } .cmp-label-r { right: 10px; }
+.cmp-range {
+  position: absolute; left: 5%; right: 5%; bottom: 12px; width: 90%;
+  accent-color: var(--accent); cursor: ew-resize;
 }
 
 @media (prefers-reduced-motion: reduce) {

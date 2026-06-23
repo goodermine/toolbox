@@ -354,6 +354,50 @@
     });
   }
 
+  // ---------- Before/after compare slider ----------
+  function openCompare(originalFile, resultBlob, outW, outH) {
+    const beforeUrl = URL.createObjectURL(originalFile);
+    const afterUrl = URL.createObjectURL(resultBlob);
+
+    const overlay = document.createElement("div");
+    overlay.className = "cmp-overlay";
+    overlay.innerHTML = `
+      <div class="cmp-box" role="dialog" aria-label="Before and after comparison">
+        <div class="cmp-frame" style="aspect-ratio:${outW}/${outH}">
+          <img class="cmp-base" alt="After (upscaled)" src="${afterUrl}" />
+          <img class="cmp-before" alt="Before (original)" src="${beforeUrl}" />
+          <div class="cmp-divider"></div>
+          <span class="cmp-label cmp-label-l">Before</span>
+          <span class="cmp-label cmp-label-r">After (AI)</span>
+          <input class="cmp-range" type="range" min="0" max="100" value="50" aria-label="Reveal slider" />
+        </div>
+        <button class="btn btn-ghost cmp-close">Close ✕</button>
+      </div>`;
+
+    const before = overlay.querySelector(".cmp-before");
+    const divider = overlay.querySelector(".cmp-divider");
+    const range = overlay.querySelector(".cmp-range");
+    const set = (pct) => {
+      before.style.clipPath = `inset(0 ${100 - pct}% 0 0)`;
+      divider.style.left = pct + "%";
+    };
+    set(50);
+    range.addEventListener("input", () => set(+range.value));
+
+    const close = () => {
+      overlay.remove();
+      document.removeEventListener("keydown", onKey);
+      URL.revokeObjectURL(beforeUrl);
+      URL.revokeObjectURL(afterUrl);
+    };
+    const onKey = (e) => { if (e.key === "Escape") close(); };
+    overlay.addEventListener("click", (e) => { if (e.target === overlay) close(); });
+    overlay.querySelector(".cmp-close").addEventListener("click", close);
+    document.addEventListener("keydown", onKey);
+
+    document.body.appendChild(overlay);
+  }
+
   // ---------- Row rendering ----------
   function makeRow(file) {
     const el = document.createElement("li");
@@ -401,11 +445,15 @@
         meta.innerHTML = `${dims} · ${window.ImgUtil.formatBytes(blob.size)}` +
           `<span class="badge">${mode === "ai" ? scale + "× AI" : scale + "× fast"}</span>`;
         actions.innerHTML = "";
+        const cmp = document.createElement("button");
+        cmp.className = "btn btn-ghost";
+        cmp.textContent = "⇄ Compare";
+        cmp.addEventListener("click", () => openCompare(file, blob, w * scale, h * scale));
         const dl = document.createElement("button");
         dl.className = "btn btn-primary";
         dl.textContent = "⬇ Download";
         dl.addEventListener("click", () => window.ImgUtil.saveBlob(blob, outName));
-        actions.appendChild(dl);
+        actions.append(cmp, dl);
       },
       markTooBig(scale, w, h, canDo2x) {
         progress.hidden = true;
