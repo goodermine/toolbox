@@ -157,7 +157,11 @@
 
         const plan = planUpscale(img.naturalWidth, img.naturalHeight, scale, mode, limits);
         if (plan.action === "too-big") {
-          row.markTooBig(scale, plan.outW, plan.outH);
+          // Only steer the user to 2× if 2× would actually succeed for this image;
+          // otherwise a big photo would just hit a second rejection.
+          const canDo2x = scale > 2 &&
+            planUpscale(img.naturalWidth, img.naturalHeight, 2, mode, limits).action !== "too-big";
+          row.markTooBig(scale, plan.outW, plan.outH, canDo2x);
           continue;
         }
         let useMode = mode;
@@ -403,11 +407,11 @@
         dl.addEventListener("click", () => window.ImgUtil.saveBlob(blob, outName));
         actions.appendChild(dl);
       },
-      markTooBig(scale, w, h) {
+      markTooBig(scale, w, h, canDo2x) {
         progress.hidden = true;
-        const advice = scale > 2
-          ? "Unfortunately " + scale + "× is too memory-heavy for this browser — please use 2× instead (it works reliably here)."
-          : "This image is too large for this browser — please try a smaller image.";
+        const advice = canDo2x
+          ? "Unfortunately " + scale + "× is too memory-heavy for this browser — please use 2× instead (it works here)."
+          : "This image is too large to upscale in this browser — please try a smaller image.";
         meta.innerHTML = `<span class="err">${advice} <span class="dim">(${scale}× would be ${w}×${h}.)</span></span>`;
         actions.innerHTML = "";
       },
