@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Free PDF Merger — combine PDFs, private, in your browser | Image Toolbox</title>
+  <meta name="description" content="Merge / combine multiple PDF files into one, free. 100% in your browser — your files are never uploaded. Reorder pages, lossless, no limits." />
+  <link rel="canonical" href="https://goodermine.github.io/toolbox/merge-pdf/" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📄</text></svg>" />
+  <link rel="manifest" href="../manifest.webmanifest" />
+  <meta name="theme-color" content="#0d1117" />
+  <link rel="apple-touch-icon" href="../icon-192.png" />
+  <link rel="stylesheet" href="../styles.css" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Image Toolbox" />
+  <meta property="og:title" content="Free PDF Merger — combine PDFs, private, in your browser" />
+  <meta property="og:description" content="Merge multiple PDFs into one, 100% in your browser. Nothing uploaded, lossless, reorderable." />
+  <meta property="og:url" content="https://goodermine.github.io/toolbox/merge-pdf/" />
+  <meta property="og:image" content="https://goodermine.github.io/toolbox/og-image.png" />
+  <meta property="og:image:width" content="1280" />
+  <meta property="og:image:height" content="640" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://goodermine.github.io/toolbox/og-image.png" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">
+      <a href="../" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:10px;">
+        <span class="logo">🧼</span>
+        <span class="brand-name">Image Toolbox</span>
+      </a>
+    </div>
+    <nav>
+      <a href="../">All tools</a>
+      <a href="#faq">FAQ</a>
+      <a href="https://github.com/goodermine/toolbox" rel="noopener">Source</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="panel">
+      <div class="hero">
+        <h1>Merge PDF files</h1>
+        <p class="subtitle">
+          Combine several PDFs into one — drag to <strong>reorder</strong> first. It's
+          <strong>lossless</strong> (300&nbsp;DPI stays 300&nbsp;DPI) and runs <strong>in your browser</strong>,
+          so your files are never uploaded. Free, no limits.
+        </p>
+
+        <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Add PDF files">
+          <div class="dropzone-inner">
+            <div class="dz-icon">📄</div>
+            <p class="dz-title">Drag &amp; drop PDF files here</p>
+            <p class="dz-sub">or <span class="link">click to browse</span> · add them in the order you want, or reorder below</p>
+          </div>
+          <input id="fileInput" type="file" accept="application/pdf,.pdf" multiple hidden />
+        </div>
+      </div>
+
+      <section id="results" class="results" hidden>
+        <div class="results-head">
+          <h2>Files to merge <span id="orderHint" class="control-label">(top → bottom)</span></h2>
+          <div class="results-actions">
+            <button id="mergeBtn" class="btn btn-primary" disabled>🔗 Merge &amp; download</button>
+            <button id="clearAll" class="btn btn-ghost">Clear</button>
+          </div>
+        </div>
+        <ul id="fileList" class="file-list"></ul>
+        <p id="mergeStatus" class="hint" hidden></p>
+      </section>
+    </section>
+
+    <section id="faq" class="info">
+      <h2>FAQ</h2>
+      <details open>
+        <summary>Are my PDFs uploaded?</summary>
+        <p>No. The whole merge happens on your device with the open-source <a href="https://github.com/Hopding/pdf-lib" rel="noopener">pdf-lib</a> library — nothing is sent to a server. That matters for large or sensitive documents (contracts, scans, IDs).</p>
+      </details>
+      <details>
+        <summary>Will it reduce quality or DPI?</summary>
+        <p>No. Pages are copied as-is, so a 300&nbsp;DPI scan stays 300&nbsp;DPI. The merged file is roughly the combined size of the parts — nothing is re-compressed.</p>
+      </details>
+      <details>
+        <summary>How do I get the order right?</summary>
+        <p>Add the files, then use the ↑ / ↓ buttons (or drag) to arrange them top-to-bottom. The merged PDF follows that order — e.g. Part 1 above Part 2.</p>
+      </details>
+      <details>
+        <summary>Is there a size limit?</summary>
+        <p>No fixed limit, but everything runs in your browser's memory, so very large files (hundreds of MB) depend on your device. Two-part 300&nbsp;DPI documents are well within range.</p>
+      </details>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Runs entirely in your browser · Your files stay on your device · <a href="../">More free tools</a></p>
+  </footer>
+
+  <script src="../shared.js"></script>
+  <script src="../vendor/pdf-lib.min.js"></script>
+  <script src="pdf.js"></script>
+</body>
+</html>

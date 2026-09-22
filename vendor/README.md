@@ -13,6 +13,7 @@ and works offline after first load).
 | `browser-image-compression.js` | [browser-image-compression](https://github.com/Donaldcwl/browser-image-compression) | MIT |
 | `exifr.umd.js` | [exifr](https://github.com/MikeKovarik/exifr) (full build) | MIT |
 | `qrcode.min.js` | [node-qrcode](https://github.com/soldair/node-qrcode) (bundled with esbuild) | MIT |
+| `pdf-lib.min.js` | [pdf-lib](https://github.com/Hopding/pdf-lib) | MIT |
 | `ort.wasm.min.js`, `ort-wasm-simd-threaded.*` | [ONNX Runtime Web](https://github.com/microsoft/onnxruntime) v1.27 | MIT |
 | `models/u2netp/u2netp.onnx` | [U²-Net](https://github.com/xuebinqin/U-2-Net) (u2netp), via the [rembg](https://github.com/danielgatis/rembg) model release | Apache-2.0 |
 

@@ -19,5 +19,6 @@ tmp/
 # Local test artifacts (samples are never committed)
 _*.heic
 _*.png
+_*.pdf
 !icon-*.png
 !og-image.png

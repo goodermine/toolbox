@@ -17,6 +17,7 @@ and nothing for anyone to leak. Installable as an app and works offline.
 | 🗜️ **Compress & convert** | `/compress/` | Shrink file size and convert between JPG/PNG/WebP, with optional resize. |
 | 🔎 **Metadata viewer** | `/metadata/` | See hidden EXIF/GPS/text data and detect AI-provenance signals (C2PA, tool names, IPTC tags). |
 | 🔳 **QR code generator** | `/qr/` | Make QR codes for a URL, text, or contact (vCard). Download as PNG. |
+| 📄 **Merge PDF** | `/merge-pdf/` | Combine multiple PDFs into one (reorderable, lossless). |
 
 All tools support **drag-and-drop, batch processing, and ZIP download**, and are
 private by design — open your browser's Network tab and you'll see nothing
@@ -52,6 +53,7 @@ Each tool page is standalone (its own SEO metadata) and reuses `styles.css` and
 | [browser-image-compression](https://github.com/Donaldcwl/browser-image-compression) | Compress | MIT |
 | [exifr](https://github.com/MikeKovarik/exifr) | Metadata viewer | MIT |
 | [node-qrcode](https://github.com/soldair/node-qrcode) | QR generator | MIT |
+| [pdf-lib](https://github.com/Hopding/pdf-lib) | Merge PDF | MIT |
 
 Everything is loaded from `/vendor` (never a CDN), so the tools stay private and
 work offline after first use. See [`vendor/README.md`](vendor/README.md).
