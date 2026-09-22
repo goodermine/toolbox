@@ -138,6 +138,12 @@ main { max-width: 960px; margin: 0 auto; padding: 0 clamp(16px, 5vw, 32px) 64px;
 .file-meta .save { color: var(--good); }
 .file-meta .grow { color: var(--warn); }
 
+/* Merge-PDF rows */
+.pdf-row { cursor: grab; }
+.pdf-row.dragging { opacity: 0.5; border-color: var(--accent); }
+.pdf-thumb { display: flex; align-items: center; justify-content: center; font-size: 1.5rem; background: var(--bg-soft); }
+.icon-btn { padding: 6px 11px; font-size: 1rem; line-height: 1; min-width: 38px; }
+
 /* Metadata viewer cards */
 .meta-card { background: linear-gradient(180deg, var(--bg-card-2), var(--bg-card)); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 14px; }
 .meta-head { display: flex; align-items: center; gap: 16px; }

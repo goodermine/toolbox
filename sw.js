@@ -15,6 +15,7 @@ const SHELL = [
   "./metadata/", "./metadata/metadata.js",
   "./background/", "./background/background.js",
   "./qr/", "./qr/qr.js",
+  "./merge-pdf/", "./merge-pdf/pdf.js",
   "./og-image.png", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png",
 ];
 
