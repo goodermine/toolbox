@@ -6,10 +6,10 @@
  *     libraries/models are cached on first use, then work offline)
  * Bump CACHE to invalidate after a deploy.
  */
-const CACHE = "toolbox-v1";
+const CACHE = "toolbox-v2";
 
 const SHELL = [
-  "./", "./index.html", "./styles.css", "./shared.js", "./app.js", "./upscale.js",
+  "./", "./index.html", "./styles.css", "./shared.js", "./app.js", "./upscale.js", "./private-tools.js",
   "./heic/", "./heic/heic.js",
   "./compress/", "./compress/compress.js",
   "./metadata/", "./metadata/metadata.js",

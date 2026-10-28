@@ -404,3 +404,6 @@ details p { color: var(--text-dim); margin: 12px 0 0; }
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; }
 }
+
+/* Private tools stay hidden until private-tools.js reveals them */
+[data-private-tool][hidden] { display: none !important; }
